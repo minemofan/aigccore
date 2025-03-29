@@ -17,11 +17,11 @@ public class TaskFlowOrderPO extends BasePOBaseModel {
     private String status;
     private String userId;
     private String splitType;
-    private String data;
+    private String chainData;
 
     // ====== 运行模式
-    private String runMode;
-    private String runModeRule;
+    private String runRule;
+    private String runRuleMode;
 
     // ====== 运行信息
     private Integer execNum;
