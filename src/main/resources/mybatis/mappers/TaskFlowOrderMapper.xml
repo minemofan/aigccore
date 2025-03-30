@@ -52,6 +52,14 @@
         WHERE id = #{id}
     </select>
 
+    <select id="lock" resultMap="TaskFlowOrderResult">
+        SELECT
+        <include refid="TaskFlowOrderParam"/>
+        FROM aigc_task_flow_order
+        WHERE id = #{id}
+        FOR UPDATE NOTWAIT
+    </select>
+
     <!-- 根据 bizId 和 bizType 查询任务流订单列表 -->
     <select id="loadUK" resultMap="TaskFlowOrderResult">
         SELECT
@@ -63,55 +71,52 @@
 
     <!-- 新增任务流订单 -->
     <insert id="insert" parameterType="org.agent.aigccore.model.po.TaskFlowOrderPO">
-        INSERT INTO aigc_task_flow_order (
-            gmt_create, gmt_modified, status, ext_info, name, biz_id, biz_type,
-            exec_num, fail_num, start_exec_time, last_exec_time, deadline_exec_time,
-            run_rule, run_rule_mode, root_task_id, run_upstream_task, run_downstream_task,
-            terminal_task_id, chain_alias, chain_data, out_biz_id, out_biz_flag, out_biz_data,
-            env, dt, source, exec_system, auto_trigger, user_id, first_exec_time
-        )
-        VALUES (
-                   #{gmtCreate}, #{gmtModified}, #{status}, #{extInfo}, #{name}, #{bizId}, #{bizType},
-                   #{execNum}, #{failNum}, #{startExecTime}, #{lastExecTime}, #{deadlineExecTime},
-                   #{runRule}, #{runRuleMode}, #{rootTaskId}, #{runUpstreamTask}, #{runDownstreamTask},
-                   #{terminalTaskId}, #{chainAlias}, #{chainData}, #{outBizId}, #{outBizFlag}, #{outBizData},
-                   #{env}, #{dt}, #{source}, #{execSystem}, #{autoTrigger}, #{userId}, #{firstExecTime}
-               )
+        INSERT INTO aigc_task_flow_order (gmt_create, gmt_modified, status, ext_info, name, biz_id, biz_type,
+                                          exec_num, fail_num, start_exec_time, last_exec_time, deadline_exec_time,
+                                          run_rule, run_rule_mode, root_task_id, run_upstream_task, run_downstream_task,
+                                          terminal_task_id, chain_alias, chain_data, out_biz_id, out_biz_flag,
+                                          out_biz_data,
+                                          env, dt, source, exec_system, auto_trigger, user_id, first_exec_time)
+        VALUES (#{gmtCreate}, #{gmtModified}, #{status}, #{extInfo}, #{name}, #{bizId}, #{bizType},
+                #{execNum}, #{failNum}, #{startExecTime}, #{lastExecTime}, #{deadlineExecTime},
+                #{runRule}, #{runRuleMode}, #{rootTaskId}, #{runUpstreamTask}, #{runDownstreamTask},
+                #{terminalTaskId}, #{chainAlias}, #{chainData}, #{outBizId}, #{outBizFlag}, #{outBizData},
+                #{env}, #{dt}, #{source}, #{execSystem}, #{autoTrigger}, #{userId}, #{firstExecTime})
     </insert>
 
     <!-- 更新任务流订单 -->
     <update id="update" parameterType="org.agent.aigccore.model.po.TaskFlowOrderPO">
         UPDATE aigc_task_flow_order
-        SET gmt_create = #{gmtCreate},
-            gmt_modified = #{gmtModified},
-            status = #{status},
-            ext_info = #{extInfo},
-            name = #{name},
-            biz_id = #{bizId},
-            biz_type = #{bizType},
-            exec_num = #{execNum},
-            fail_num = #{failNum},
-            start_exec_time = #{startExecTime},
-            last_exec_time = #{lastExecTime},
-            deadline_exec_time = #{deadlineExecTime},
-            run_rule = #{runRule},
-            run_rule_mode = #{runRuleMode},
-            root_task_id = #{rootTaskId},
-            run_upstream_task = #{runUpstreamTask},
+        SET gmt_create          = #{gmtCreate},
+            gmt_modified        = #{gmtModified},
+            status              = #{status},
+            ext_info            = #{extInfo},
+            name                = #{name},
+            biz_id              = #{bizId},
+            biz_type            = #{bizType},
+            exec_num            = #{execNum},
+            fail_num            = #{failNum},
+            start_exec_time     = #{startExecTime},
+            last_exec_time      = #{lastExecTime},
+            deadline_exec_time  = #{deadlineExecTime},
+            run_rule            = #{runRule},
+            run_rule_mode       = #{runRuleMode},
+            root_task_id        = #{rootTaskId},
+            run_upstream_task   = #{runUpstreamTask},
             run_downstream_task = #{runDownstreamTask},
-            terminal_task_id = #{terminalTaskId},
-            chain_alias = #{chainAlias},
-            chain_data = #{chainData},
-            out_biz_id = #{outBizId},
-            out_biz_flag = #{outBizFlag},
-            out_biz_data = #{outBizData},
-            env = #{env},
-            dt = #{dt},
-            source = #{source},
-            exec_system = #{execSystem},
-            auto_trigger = #{autoTrigger},
-            user_id = #{userId},
-            first_exec_time = #{firstExecTime}
+            terminal_task_id    = #{terminalTaskId},
+            chain_alias         = #{chainAlias},
+            chain_data          = #{chainData},
+            out_biz_id          = #{outBizId},
+            out_biz_flag        = #{outBizFlag},
+            out_biz_data        = #{outBizData},
+            env                 = #{env},
+            dt                  = #{dt},
+            source              = #{source},
+            exec_system         = #{execSystem},
+            auto_trigger        = #{autoTrigger},
+            user_id             = #{userId},
+            first_exec_time     = #{firstExecTime}
         WHERE id = #{id}
     </update>
 
@@ -121,4 +126,56 @@
         FROM aigc_task_flow_order
         WHERE id = #{id}
     </delete>
+
+    <update id="updateChainInfo" parameterType="java.util.Map">
+        UPDATE aigc_task_flow_order
+        SET gmt_modified        = now()
+          , root_task_id        = #{rootTaskId}
+          , run_upstream_task   = #{runUpstreamTask}
+          , run_downstream_task = #{runDownstreamTask}
+          , terminal_task_id    = #{terminalTaskId}
+          , ext_info            = #{extInfo}
+        WHERE id = #{id}
+    </update>
+
+    <select id="page" resultMap="TaskFlowOrderResult" parameterType="java.util.Map">
+        SELECT
+        <include refid="TaskFlowOrderParam"/>
+        FROM aigc_task_flow_order
+        WHERE status = #{status}
+        AND env = #{env}
+        AND start_exec_time &lt; now()
+        AND exec_system = #{execSystem}
+        ORDER BY last_exec_time ASC
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <select id="pageWhitelistBizType" resultMap="TaskFlowOrderResult" parameterType="java.util.Map">
+        SELECT
+        <include refid="TaskFlowOrderParam"/>
+        FROM aigc_task_flow_order
+        WHERE status = #{status}
+        AND env = #{env}
+        AND start_exec_time &lt; now()
+        AND exec_system = #{execSystem}
+        AND biz_type in
+        <foreach collection="bizTypeWhitelist" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY last_exec_time ASC
+        LIMIT #{offset},#{pageSize}
+    </select>
+
+    <select id="query" resultMap="TaskFlowOrderResult" parameterType="java.util.Map">
+        SELECT
+        <include refid="TaskFlowOrderParam"/>
+        FROM aigc_task_flow_order
+        WHERE biz_type = #{bizType}
+        <if test="bizId != null and bizId != ''">
+            AND biz_id = #{bizId}
+        </if>
+        AND user_id = #{userId}
+        ORDER BY gmt_create DESC
+        LIMIT 200
+    </select>
 </mapper>
