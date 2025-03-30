@@ -75,8 +75,8 @@ public interface TaskFlowOrderMapper {
     int updateChainInfo(
             @Param("id") Long id,
             @Param("rootTaskId") String rootTaskId,
-            @Param("runUpstreamTask") Boolean runUpstreamTask,
-            @Param("runDownstreamTask") Boolean runDownstreamTask,
+            @Param("runUpstreamTask") List<String> runUpstreamTask,
+            @Param("runDownstreamTask") List<String> runDownstreamTask,
             @Param("terminalTaskId") String terminalTaskId,
             @Param("extInfo") String extInfo
     );
