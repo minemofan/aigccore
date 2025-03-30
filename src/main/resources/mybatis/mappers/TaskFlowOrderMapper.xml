@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.agent.aigccore.dao.mappers.TaskFlowOrderMapper">
+
+    <!-- 根据 ID 查询任务流订单 -->
+    <select id="selectById" resultType="org.agent.aigccore.model.po.TaskFlowOrderPO">
+        SELECT * FROM aigc_task_flow_order WHERE id = #{id}
+    </select>
+
+    <!-- 根据 bizId 和 bizType 查询任务流订单列表 -->
+    <select id="selectByBizIdAndBizType" resultType="org.agent.aigccore.model.po.TaskFlowOrderPO">
+        SELECT * FROM aigc_task_flow_order WHERE biz_id = #{bizId} AND biz_type = #{bizType}
+    </select>
+
+    <!-- 新增任务流订单 -->
+    <insert id="insert" parameterType="org.agent.aigccore.model.po.TaskFlowOrderPO">
+        INSERT INTO aigc_task_flow_order (
+            gmt_create, gmt_modified, status, ext_info, name, biz_id, biz_type,
+            exec_num, fail_num, start_exec_time, last_exec_time, deadline_exec_time,
+            run_mode, run_mode_rule, root_task_id, root_task_type, run_upstream_task,
+            run_downstream_task, out_biz_id, out_biz_flag, out_biz_data, env, user_id,
+            data_version, source, exec_system, first_exec_time, terminal_task_id,
+            terminal_task_type, auto_trigger, content_security_data, chain_code, private_node_data
+        ) VALUES (
+                     #{gmtCreate}, #{gmtModified}, #{status}, #{extInfo}, #{name}, #{bizId}, #{bizType},
+                     #{execNum}, #{failNum}, #{startExecTime}, #{lastExecTime}, #{deadlineExecTime},
+                     #{runMode}, #{runModeRule}, #{rootTaskId}, #{rootTaskType}, #{runUpstreamTask},
+                     #{runDownstreamTask}, #{outBizId}, #{outBizFlag}, #{outBizData}, #{env}, #{userId},
+                     #{dataVersion}, #{source}, #{execSystem}, #{firstExecTime}, #{terminalTaskId},
+                     #{terminalTaskType}, #{autoTrigger}, #{contentSecurityData}, #{chainCode}, #{privateNodeData}
+                 )
+    </insert>
+
+    <!-- 更新任务流订单 -->
+    <update id="update" parameterType="org.agent.aigccore.model.po.TaskFlowOrderPO">
+        UPDATE aigc_task_flow_order
+        SET
+            gmt_create = #{gmtCreate},
+            gmt_modified = #{gmtModified},
+            status = #{status},
+            ext_info = #{extInfo},
+            name = #{name},
+            biz_id = #{bizId},
+            biz_type = #{bizType},
+            exec_num = #{execNum},
+            fail_num = #{failNum},
+            start_exec_time = #{startExecTime},
+            last_exec_time = #{lastExecTime},
+            deadline_exec_time = #{deadlineExecTime},
+            run_mode = #{runMode},
+            run_mode_rule = #{runModeRule},
+            root_task_id = #{rootTaskId},
+            root_task_type = #{rootTaskType},
+            run_upstream_task = #{runUpstreamTask},
+            run_downstream_task = #{runDownstreamTask},
+            out_biz_id = #{outBizId},
+            out_biz_flag = #{outBizFlag},
+            out_biz_data = #{outBizData},
+            env = #{env},
+            user_id = #{userId},
+            data_version = #{dataVersion},
+            source = #{source},
+            exec_system = #{execSystem},
+            first_exec_time = #{firstExecTime},
+            terminal_task_id = #{terminalTaskId},
+            terminal_task_type = #{terminalTaskType},
+            auto_trigger = #{autoTrigger},
+            content_security_data = #{contentSecurityData},
+            chain_code = #{chainCode},
+            private_node_data = #{privateNodeData}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据 ID 删除任务流订单 -->
+    <delete id="deleteById">
+        DELETE FROM aigc_task_flow_order WHERE id = #{id}
+    </delete>
+</mapper>
