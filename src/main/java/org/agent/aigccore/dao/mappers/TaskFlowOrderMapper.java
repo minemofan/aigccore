@@ -14,7 +14,7 @@ public interface TaskFlowOrderMapper {
      * @param id 任务流订单 ID
      * @return 任务流订单实体
      */
-    TaskFlowOrderPO selectById(@Param("id") Long id);
+    TaskFlowOrderPO load(@Param("id") Long id);
 
     /**
      * 根据 bizId 和 bizType 查询任务流订单列表
@@ -22,7 +22,7 @@ public interface TaskFlowOrderMapper {
      * @param bizType 业务类型
      * @return 任务流订单列表
      */
-    List<TaskFlowOrderPO> selectByBizIdAndBizType(@Param("bizId") String bizId, @Param("bizType") String bizType);
+    List<TaskFlowOrderPO> loadUK(@Param("bizId") String bizId, @Param("bizType") String bizType);
 
     /**
      * 新增任务流订单
@@ -43,5 +43,5 @@ public interface TaskFlowOrderMapper {
      * @param id 任务流订单 ID
      * @return 删除记录数
      */
-    int deleteById(@Param("id") Long id);
+    int delete(@Param("id") Long id);
 }
