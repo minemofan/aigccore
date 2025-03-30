@@ -5,12 +5,12 @@
 <mapper namespace="org.agent.aigccore.dao.mappers.TaskFlowOrderMapper">
 
     <!-- 根据 ID 查询任务流订单 -->
-    <select id="selectById" resultType="org.agent.aigccore.model.po.TaskFlowOrderPO">
+    <select id="load" resultType="org.agent.aigccore.model.po.TaskFlowOrderPO">
         SELECT * FROM aigc_task_flow_order WHERE id = #{id}
     </select>
 
     <!-- 根据 bizId 和 bizType 查询任务流订单列表 -->
-    <select id="selectByBizIdAndBizType" resultType="org.agent.aigccore.model.po.TaskFlowOrderPO">
+    <select id="loadUK" resultType="org.agent.aigccore.model.po.TaskFlowOrderPO">
         SELECT * FROM aigc_task_flow_order WHERE biz_id = #{bizId} AND biz_type = #{bizType}
     </select>
 
@@ -42,8 +42,6 @@
             status = #{status},
             ext_info = #{extInfo},
             name = #{name},
-            biz_id = #{bizId},
-            biz_type = #{bizType},
             exec_num = #{execNum},
             fail_num = #{failNum},
             start_exec_time = #{startExecTime},
@@ -55,9 +53,6 @@
             root_task_type = #{rootTaskType},
             run_upstream_task = #{runUpstreamTask},
             run_downstream_task = #{runDownstreamTask},
-            out_biz_id = #{outBizId},
-            out_biz_flag = #{outBizFlag},
-            out_biz_data = #{outBizData},
             env = #{env},
             user_id = #{userId},
             data_version = #{dataVersion},
@@ -67,8 +62,6 @@
             terminal_task_id = #{terminalTaskId},
             terminal_task_type = #{terminalTaskType},
             auto_trigger = #{autoTrigger},
-            content_security_data = #{contentSecurityData},
-            chain_code = #{chainCode},
             private_node_data = #{privateNodeData}
         WHERE id = #{id}
     </update>
