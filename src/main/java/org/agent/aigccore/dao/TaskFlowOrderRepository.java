@@ -11,7 +11,7 @@ public interface TaskFlowOrderRepository {
 
     TaskFlowOrderBO load(String id, boolean lock);
 
-    int updateChainInfo(String id, String rootTaskId, List<String> runUpstreamTask, List<String> runDownstreamTask, String terminalTaskId, String extInfo);
+    void updateChainInfo(String id, String rootTaskId, List<String> runUpstreamTask, List<String> runDownstreamTask, String terminalTaskId, String extInfo);
 
     List<TaskFlowOrderBO> page(TaskFlowStatusEnum status, ExecSystemEnum execSystem, int offset, int pageSize);
 

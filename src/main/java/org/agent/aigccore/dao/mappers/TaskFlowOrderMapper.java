@@ -59,7 +59,7 @@ public interface TaskFlowOrderMapper {
      * @param id 任务流订单 ID
      * @return 删除记录数
      */
-    int delete(@Param("id") Long id);
+    int delete(@Param("id") String id);
 
     /**
      * 更新任务流订单的链信息
@@ -73,7 +73,7 @@ public interface TaskFlowOrderMapper {
      * @return 更新记录数
      */
     int updateChainInfo(
-            @Param("id") Long id,
+            @Param("id") String id,
             @Param("rootTaskId") String rootTaskId,
             @Param("runUpstreamTask") List<String> runUpstreamTask,
             @Param("runDownstreamTask") List<String> runDownstreamTask,
